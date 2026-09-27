@@ -48,7 +48,6 @@ class Program
         IConfiguration configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
-            .AddJsonFile("appsettings.Secrets.json", optional: true)
             .Build();
 
         Settings settings = configuration.Get<Settings>() ?? new Settings();
@@ -121,7 +120,7 @@ class Program
 
         var page = await browser.NewPageAsync(new BrowserNewPageOptions
         {
-            
+            ViewportSize = new ViewportSize { Width = 1920, Height = 1080 }
         });
 
         await page.AddInitScriptAsync(@"
