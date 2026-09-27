@@ -26,6 +26,9 @@ RUN apt-get update \
 COPY --from=build /app/publish .
 
 # Install Chromium + all its OS-level dependencies
+# (force the full Chromium build, not the headless-shell-only build,
+# since we run in non-headless mode under Xvfb)
+ENV PLAYWRIGHT_CHROMIUM_USE_HEADLESS_SHELL=0
 RUN pwsh playwright.ps1 install --with-deps chromium
 
 # Run the app under a virtual display so Chrome runs in normal
