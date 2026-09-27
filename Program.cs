@@ -45,35 +45,60 @@ class Program
     {
         Console.OutputEncoding = Encoding.UTF8;
 
+        Console.WriteLine("Step: Loading configuration...");
+
         IConfiguration configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+            .AddJsonFile("appsettings.Secrets.json", optional: true, reloadOnChange: false)
+            .AddEnvironmentVariables()
             .Build();
 
         Settings settings = configuration.Get<Settings>() ?? new Settings();
 
+        Console.WriteLine($"Done: Configuration loaded. WhapiToken set: {!string.IsNullOrEmpty(settings.WhapiToken)}, WhatsappTo set: {!string.IsNullOrEmpty(settings.WhatsappTo)}");
+
+        Console.WriteLine("Step: Launching browser...");
+
         var (playwright, browser, page) = await SetupBrowser();
 
-        await page.GotoAsync("https://khamsat.com/community/requests");
-        await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        Console.WriteLine("Done: Browser launched.");
+
+        Console.WriteLine("Step: Loading requests page (first time)...");
+
+        await GoToRequestsPage(page);
+
+        Console.WriteLine("Done: Requests page loaded.");
+
+        Console.WriteLine("Step: Loading sent-requests file...");
 
         List<SentRequest> sentRequests = LoadSentRequests(sentRequestsFilePath);
 
+        Console.WriteLine($"Done: Loaded {sentRequests.Count} previously-sent entries.");
+
         while (true)
         {
+            Console.WriteLine("Step: Scanning for matching requests...");
+
             List<RequestInfo> requests = await GetRequests(
                 page,
                 settings.Keywords,
                 settings.MaxMinutes
             );
 
-            Console.WriteLine($"Found {requests.Count} matching requests.");
+            Console.WriteLine($"Done: Found {requests.Count} matching requests.");
             Console.WriteLine("================================");
 
             if (requests.Count > 0)
             {
+                Console.WriteLine("Step: Processing requests (sending WhatsApp messages)...");
+
                 await ProcessRequests(requests, settings.WhapiToken, settings.WhatsappTo, sentRequests);
+
+                Console.WriteLine("Done: Finished processing requests.");
             }
+
+            Console.WriteLine("Step: Cleaning up and saving sent-requests file...");
 
             // Remove entries older than MaxMinutes and save
             sentRequests = sentRequests
@@ -82,19 +107,60 @@ class Program
 
             SaveSentRequests(sentRequestsFilePath, sentRequests);
 
+            Console.WriteLine("Done: Sent-requests file saved.");
             Console.WriteLine();
-            Console.WriteLine("Done.");
 
-            Console.WriteLine($"Waiting {settings.ScanIntervalSeconds} seconds before the next scan...");
+            Console.WriteLine($"Step: Waiting {settings.ScanIntervalSeconds} seconds before the next scan...");
 
             await Task.Delay(TimeSpan.FromSeconds(settings.ScanIntervalSeconds));
 
-            await page.GotoAsync("https://khamsat.com/community/requests");
-            await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+            Console.WriteLine("Done: Wait finished.");
+
+            Console.WriteLine("Step: Reloading requests page...");
+
+            await GoToRequestsPage(page);
+
+            Console.WriteLine("Done: Requests page reloaded.");
         }
 
         await browser.CloseAsync();
         playwright.Dispose();
+    }
+
+    // ==========================================
+    // Navigate to the khamsat requests page, with
+    // an explicit timeout and clear diagnostic
+    // messages so a failure never hangs silently
+    // ==========================================
+
+    static async Task GoToRequestsPage(IPage page)
+    {
+        Console.WriteLine("Navigating to khamsat.com/community/requests...");
+
+        try
+        {
+            await page.GotoAsync(
+                "https://khamsat.com/community/requests",
+                new PageGotoOptions { Timeout = 30000 }
+            );
+
+            Console.WriteLine("Page navigation done. Waiting for network idle...");
+
+            await page.WaitForLoadStateAsync(
+                LoadState.NetworkIdle,
+                new PageWaitForLoadStateOptions { Timeout = 30000 }
+            );
+
+            Console.WriteLine("Page fully loaded.");
+        }
+        catch (TimeoutException ex)
+        {
+            Console.WriteLine($"Timed out while loading the requests page: {ex.Message}");
+        }
+        catch (PlaywrightException ex)
+        {
+            Console.WriteLine($"Playwright error while loading the requests page: {ex.Message}");
+        }
     }
 
     // ==========================================
@@ -105,8 +171,11 @@ class Program
 
     static async Task<(IPlaywright playwright, IBrowser browser, IPage page)> SetupBrowser()
     {
+        Console.WriteLine("Creating Playwright instance...");
         var playwright = await Playwright.CreateAsync();
+        Console.WriteLine("Playwright instance created.");
 
+        Console.WriteLine("Launching Chromium (Headless=false, under Xvfb)...");
         var browser = await playwright.Chromium.LaunchAsync(
             new BrowserTypeLaunchOptions
             {
@@ -117,11 +186,14 @@ class Program
                 },
                 IgnoreDefaultArgs = new[] { "--enable-automation" }
             });
+        Console.WriteLine("Chromium launched.");
 
+        Console.WriteLine("Opening new page...");
         var page = await browser.NewPageAsync(new BrowserNewPageOptions
         {
-            //ViewportSize = new ViewportSize { Width = 1920, Height = 1080 }
+            ViewportSize = new ViewportSize { Width = 1920, Height = 1080 }
         });
+        Console.WriteLine("New page opened.");
 
         await page.AddInitScriptAsync(@"
             Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
@@ -220,7 +292,7 @@ class Program
                 PublishedAt = request.PublishedAt
             });
 
-            Console.WriteLine("WhatsApp message sent. Moving to the next request.");
+            Console.WriteLine("Done: WhatsApp message sent. Moving to the next request.");
             Console.WriteLine("================================");
         }
     }

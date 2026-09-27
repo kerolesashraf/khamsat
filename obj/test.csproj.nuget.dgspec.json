@@ -55,6 +55,10 @@
               "target": "Package",
               "version": "[10.0.12, )"
             },
+            "Microsoft.Extensions.Configuration.EnvironmentVariables": {
+              "target": "Package",
+              "version": "[10.0.12, )"
+            },
             "Microsoft.Extensions.Configuration.Json": {
               "target": "Package",
               "version": "[10.0.12, )"

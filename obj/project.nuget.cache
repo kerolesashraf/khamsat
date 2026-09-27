@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "0TYVkZzDNz4=",
+  "dgSpecHash": "KjJ+sumF3Xw=",
   "success": true,
   "projectFilePath": "C:\\Users\\Keroles Ashraf\\Desktop\\test\\test\\test.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "C:\\Users\\Keroles Ashraf\\.nuget\\packages\\microsoft.extensions.configuration\\10.0.12\\microsoft.extensions.configuration.10.0.12.nupkg.sha512",
     "C:\\Users\\Keroles Ashraf\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\10.0.12\\microsoft.extensions.configuration.abstractions.10.0.12.nupkg.sha512",
     "C:\\Users\\Keroles Ashraf\\.nuget\\packages\\microsoft.extensions.configuration.binder\\10.0.12\\microsoft.extensions.configuration.binder.10.0.12.nupkg.sha512",
+    "C:\\Users\\Keroles Ashraf\\.nuget\\packages\\microsoft.extensions.configuration.environmentvariables\\10.0.12\\microsoft.extensions.configuration.environmentvariables.10.0.12.nupkg.sha512",
     "C:\\Users\\Keroles Ashraf\\.nuget\\packages\\microsoft.extensions.configuration.fileextensions\\10.0.12\\microsoft.extensions.configuration.fileextensions.10.0.12.nupkg.sha512",
     "C:\\Users\\Keroles Ashraf\\.nuget\\packages\\microsoft.extensions.configuration.json\\10.0.12\\microsoft.extensions.configuration.json.10.0.12.nupkg.sha512",
     "C:\\Users\\Keroles Ashraf\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\10.0.12\\microsoft.extensions.fileproviders.abstractions.10.0.12.nupkg.sha512",
