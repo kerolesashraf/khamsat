@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)system.text.json\10.0.12\buildTransitive\net8.0\System.Text.Json.targets" Condition="Exists('$(NuGetPackageRoot)system.text.json\10.0.12\buildTransitive\net8.0\System.Text.Json.targets')" />
+    <Import Project="$(NuGetPackageRoot)selenium.webdriver.chromedriver\153.0.8010.5200\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('$(NuGetPackageRoot)selenium.webdriver.chromedriver\153.0.8010.5200\build\Selenium.WebDriver.ChromeDriver.targets')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.playwright\1.62.0\buildTransitive\Microsoft.Playwright.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.playwright\1.62.0\buildTransitive\Microsoft.Playwright.targets')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.extensions.configuration.binder\10.0.12\buildTransitive\netstandard2.0\Microsoft.Extensions.Configuration.Binder.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.extensions.configuration.binder\10.0.12\buildTransitive\netstandard2.0\Microsoft.Extensions.Configuration.Binder.targets')" />
+  </ImportGroup>
+</Project>
