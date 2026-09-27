@@ -121,10 +121,18 @@ class Program
 
             Console.WriteLine("Step: Cleaning up and saving sent-requests file...");
 
+            int countBeforeCleanup = sentRequests.Count;
+
             // Remove entries older than MaxMinutes and save
             sentRequests = sentRequests
                 .Where(sent => (DateTimeOffset.UtcNow - sent.PublishedAt).TotalMinutes < settings.MaxMinutes)
                 .ToList();
+
+            int countAfterCleanup = sentRequests.Count;
+            int removedCount = countBeforeCleanup - countAfterCleanup;
+
+            Console.WriteLine($"Cleaning sent-requests list: {countBeforeCleanup} entries before cleanup");
+            Console.WriteLine($"Cleaning sent-requests list: {countAfterCleanup} entries after cleanup (removed {removedCount} expired entries)");
 
             SaveSentRequests(sentRequestsFilePath, sentRequests);
 
