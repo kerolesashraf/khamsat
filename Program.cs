@@ -43,7 +43,28 @@ class Program
 
     static async Task Main()
     {
-        Console.OutputEncoding = Encoding.UTF8;
+        try
+        {
+            await RunAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("===== UNHANDLED EXCEPTION - APP CRASHED =====");
+            Console.WriteLine(ex.ToString());
+            Console.WriteLine("==============================================");
+        }
+    }
+
+    static async Task RunAsync()
+    {
+        try
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Note: Could not set Console.OutputEncoding (this is fine): {ex.Message}");
+        }
 
         Console.WriteLine("Step: Loading configuration...");
 
