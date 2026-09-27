@@ -120,7 +120,7 @@ class Program
 
         var page = await browser.NewPageAsync(new BrowserNewPageOptions
         {
-            ViewportSize = new ViewportSize { Width = 1920, Height = 1080 }
+            //ViewportSize = new ViewportSize { Width = 1920, Height = 1080 }
         });
 
         await page.AddInitScriptAsync(@"

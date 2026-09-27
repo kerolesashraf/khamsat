@@ -151,3 +151,4 @@ C:\Users\Keroles Ashraf\Desktop\test\test\bin\Debug\net8.0\System.IO.Pipelines.d
 C:\Users\Keroles Ashraf\Desktop\test\test\bin\Debug\net8.0\System.Text.Encodings.Web.dll
 C:\Users\Keroles Ashraf\Desktop\test\test\bin\Debug\net8.0\System.Text.Json.dll
 C:\Users\Keroles Ashraf\Desktop\test\test\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
+C:\Users\Keroles Ashraf\Desktop\test\test\obj\Debug\net8.0\test.sourcelink.json
