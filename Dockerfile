@@ -19,7 +19,7 @@ RUN apt-get update \
     && dpkg -i packages-microsoft-prod.deb \
     && rm packages-microsoft-prod.deb \
     && apt-get update \
-    && apt-get install -y --no-install-recommends powershell xvfb \
+    && apt-get install -y --no-install-recommends powershell xvfb xauth \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the published app (includes playwright.ps1 matching the project's Playwright version)
