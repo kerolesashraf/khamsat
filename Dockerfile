@@ -31,6 +31,12 @@ COPY --from=build /app/publish .
 ENV PLAYWRIGHT_CHROMIUM_USE_HEADLESS_SHELL=0
 RUN pwsh playwright.ps1 install --with-deps chromium
 
+# Disable .NET's console output buffering just in case
+ENV DOTNET_CONSOLE_ANSI_COLOR=0
+
 # Run the app under a virtual display so Chrome runs in normal
-# (non-headless) mode, which the target site doesn't block
-ENTRYPOINT ["xvfb-run", "--auto-servernum", "--server-args=-screen 0 1920x1080x24", "dotnet", "test.dll"]
+# (non-headless) mode, which the target site doesn't block.
+# Shell form (not exec/JSON form) is used here because xvfb-run
+# is a shell script itself, and this form has proven more reliable
+# at forwarding the wrapped process's stdout/stderr unbuffered.
+ENTRYPOINT xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" stdbuf -oL -eL dotnet test.dll
